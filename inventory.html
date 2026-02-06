@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TRelectro - Stock</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --surface: #ffffff;
+      --accent: #000000;
+      --muted: #444444;
+      --border: #d0d0d0;
+      --shadow: 0 6px 12px rgba(0,0,0,0.08);
+    }
+    .dark {
+      --bg: #000000;
+      --text: #ffffff;
+      --surface: #111111;
+      --accent: #ffffff;
+      --muted: #bbbbbb;
+      --border: #333333;
+      --shadow: 0 10px 24px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: background-color .25s ease, color .25s ease; }
+    header { background: #000; padding: 20px; display: flex; justify-content: center; align-items: center; }
+    header img { height: 44px; display: block; filter: none; }
+    nav { background: transparent; display: flex; justify-content: center; position: sticky; top: 0; z-index: 10; padding: 12px 16px; }
+    .navline { display: flex; gap: 6px; border: 1px solid #000; background: #000; border-radius: 999px; padding: 6px; box-shadow: var(--shadow); }
+    .navline a { display: flex; align-items: center; gap: 8px; color: #fff; padding: 10px 14px; text-decoration: none; font-weight: 700; border-radius: 999px; transition: background-color .2s ease, color .2s ease; }
+    .navline a:hover { background: #fff; color: #000; }
+    .navline svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .wrap { max-width: 1100px; margin: 24px auto; padding: 0 20px; }
+    .container { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: var(--shadow); transition: background-color .25s ease, border-color .25s ease, color .25s ease; }
+    h1 { margin: 0 0 16px; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+    .input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); transition: background-color .25s ease, border-color .25s ease, color .25s ease; }
+    .cta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+    .btn { appearance: none; border: 2px solid var(--text); background: transparent; color: var(--text); padding: 10px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+    .btn.primary, .btn.success, .btn.info, .btn.danger { background: transparent; color: var(--text); }
+    .btn:hover { background: var(--text); color: var(--bg); }
+    table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+    thead th { text-align: left; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 10px; border-bottom: 1px solid var(--border); }
+    tbody td { padding: 12px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+    tbody tr:nth-child(odd) { background: rgba(0,0,0,0.03); }
+    tr.low-stock { outline: 2px solid var(--text); background: rgba(0,0,0,0.04); }
+    .message { text-align:center; font-weight:bold; margin-top:10px; color: var(--muted); }
+    .theme-toggle { position: fixed; top: 16px; right: 16px; width: 56px; height: 32px; border: 2px solid var(--text); border-radius: 999px; background: var(--surface); display: flex; align-items: center; padding: 2px; box-shadow: var(--shadow); cursor: pointer; transition: background-color .25s ease, border-color .25s ease; }
+    .theme-toggle .knob { width: 28px; height: 24px; border-radius: 999px; background: var(--text); transform: translateX(0); transition: transform .25s ease, background-color .25s ease; }
+    .dark .theme-toggle .knob { transform: translateX(22px); background: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="theme-toggle" onclick="toggleMode()" aria-label="Toggle theme"><div class="knob"></div></div>
+  <header>
+    <svg xmlns="http://www.w3.org/2000/svg" width="220" height="44" viewBox="0 0 220 44" aria-label="TRELECTRO">
+      <polygon points="6,2 22,2 14,20 28,20 10,42 16,24 0,24" fill="#ffffff"/>
+      <text x="40" y="31" fill="#ffffff" font-size="28" font-weight="900" font-family="Segoe UI, Arial Black, Arial, sans-serif">TR ELECTRO</text>
+    </svg>
+  </header>
+  <nav>
+    <div class="navline">
+      <a href="index.html" aria-label="Accueil">
+        <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22v-6h6v6"/></svg>
+        <span>Accueil</span>
+      </a>
+      <a href="stock.html" aria-label="Vente">
+        <svg viewBox="0 0 24 24"><path d="M3 6h16l-2 8H7L3 6z"/><circle cx="8" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg>
+        <span>Vente</span>
+      </a>
+      <a href="inventory.html" aria-label="Article">
+        <svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path d="M3 7l9 4 9-4"/></svg>
+        <span>Article</span>
+      </a>
+      <a href="stockview.html" aria-label="Stock">
+        <svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path d="M3 7l9 4 9-4"/></svg>
+        <span>Stock</span>
+      </a>
+      <a href="services.html" aria-label="Services">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16v4H4z"/><path d="M4 10h16v10H4z"/></svg>
+        <span>Services</span>
+      </a>
+      <a href="#" onclick="logout()" aria-label="Déconnexion">
+        <svg viewBox="0 0 24 24"><path d="M14 3h7v18h-7"/><path d="M10 12H3"/><path d="M10 12l4-4"/><path d="M10 12l4 4"/></svg>
+        <span>Déconnexion</span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <div class="container">
+      <h1>Article</h1>
+      <div class="form-grid">
+        <input class="input" type="text" id="itemName" placeholder="Nom de l’article">
+        <input class="input" type="number" id="itemPrice" placeholder="Prix initial">
+        <input class="input" type="number" id="itemSalePrice" placeholder="Prix de vente">
+      </div>
+      <div class="cta">
+        <button class="btn primary" onclick="addItem()">Ajouter l’article</button>
+        <button class="btn info" onclick="undoLast()">Annuler la dernière action</button>
+      </div>
+      <div id="message" class="message"></div>
+      <div id="detail" class="card" style="display:none; margin-top:12px;">
+        <h3 style="margin:0 0 6px; font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em;">Détail de l’article</h3>
+        <div id="detailName" class="value" style="font-size:20px; font-weight:800;"></div>
+        <div class="form-grid" style="margin-top:10px;">
+          <input class="input" type="number" id="detailInit" placeholder="Prix initial">
+          <input class="input" type="number" id="detailSale" placeholder="Prix de vente">
+        </div>
+        <div style="margin-top:8px; font-weight:700;">Profit: <span id="detailProfit">0,00 DT</span></div>
+        <div class="cta" style="margin-top:10px;">
+          <button class="btn info" onclick="saveDetail()">Enregistrer</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Article</th>
+            <th>Prix initial</th>
+            <th>Prix de vente</th>
+            <th>Supprimer</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function isAuthenticated(){ return !!localStorage.getItem('sessionUser'); }
+    function requireAuth(){ if(!isAuthenticated()){ window.location.href='login.html'; } }
+    function logout(){ localStorage.removeItem('sessionUser'); window.location.href='login.html'; }
+    (function initTheme(){ var t=localStorage.getItem('theme'); if(t==='dark'){ document.body.classList.add('dark'); } })();
+    function toggleMode(){ var isDark = document.body.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); }
+    requireAuth();
+    function formatCurrency(value) {
+      try {
+        return new Intl.NumberFormat('fr-TN', { style: 'currency', currency: 'TND', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(value));
+      } catch (e) {
+        return Number(value).toFixed(2) + " DT";
+      }
+    }
+    let inventory = [];
+    let lastAction = null;
+    let selectedName = null;
+
+    function loadInventory() {
+      const saved = localStorage.getItem("inventory");
+      if (saved) inventory = JSON.parse(saved);
+      readSelected();
+      renderTable();
+      renderDetail();
+    }
+
+    function saveInventory() {
+      localStorage.setItem("inventory", JSON.stringify(inventory));
+    }
+
+    function addItem() {
+      const name = document.getElementById('itemName').value.trim();
+      const price = parseFloat(document.getElementById('itemPrice').value);
+      const salePrice = parseFloat(document.getElementById('itemSalePrice').value);
+      if (!name || isNaN(price) || isNaN(salePrice)) { alert("Remplissez tous les champs"); return; }
+      inventory.push({ name, stock: 0, price, salePrice });
+      lastAction = { type: "add", item: { name, stock: 0, price, salePrice } };
+      saveInventory(); updateGlobalTotals(); renderTable();
+      document.getElementById('message').innerText = "Article ajouté avec succès !";
+    }
+
+    function deleteItem(index) {
+      if(!confirm("Supprimer cet article ?")) return;
+      lastAction = { type: "delete", item: inventory[index], index };
+      inventory.splice(index, 1);
+      saveInventory(); updateGlobalTotals(); renderTable();
+      document.getElementById('message').innerText = "Article supprimé !";
+    }
+
+    function undoLast() {
+      if (!lastAction) return;
+      if (lastAction.type === "delete") {
+        inventory.splice(lastAction.index, 0, lastAction.item);
+      } else if (lastAction.type === "add") {
+        inventory.pop();
+      }
+      saveInventory(); renderTable();
+      document.getElementById('message').innerText = "Annulation réussie !";
+      lastAction = null;
+    }
+
+    function renderTable() {
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = "";
+      inventory.forEach((item, index) => {
+        const pInit = item.price;
+        const pSale = (item.salePrice != null) ? item.salePrice : item.price;
+        const row = document.createElement("tr");
+        row.innerHTML = ""
+          + "<td>" + item.name + "</td>"
+          + "<td>" + formatCurrency(pInit) + "</td>"
+          + "<td>" + formatCurrency(pSale) + "</td>"
+          + "<td><button class=\"btn danger\" onclick=\"deleteItem(" + index + ")\">Supprimer</button></td>";
+        tableBody.appendChild(row);
+      });
+    }
+
+    function readSelected(){
+      try {
+        const qs = new URLSearchParams(window.location.search);
+        selectedName = qs.get('name');
+      } catch(e) { selectedName = null; }
+    }
+    function renderDetail(){
+      const card = document.getElementById('detail');
+      if(!selectedName){ card.style.display = 'none'; return; }
+      const item = inventory.find(i => i.name === selectedName);
+      if(!item){ card.style.display = 'none'; return; }
+      card.style.display = 'block';
+      document.getElementById('detailName').innerText = item.name;
+      const pInit = item.price || 0;
+      const pSale = (item.salePrice != null) ? item.salePrice : item.price;
+      document.getElementById('detailInit').value = pInit;
+      document.getElementById('detailSale').value = pSale;
+      document.getElementById('detailProfit').innerText = formatCurrency(pSale - pInit);
+      document.getElementById('detailInit').oninput = function(){
+        const pi = parseFloat(this.value);
+        const ps = parseFloat(document.getElementById('detailSale').value);
+        document.getElementById('detailProfit').innerText = formatCurrency((isNaN(ps)?0:ps) - (isNaN(pi)?0:pi));
+      };
+      document.getElementById('detailSale').oninput = function(){
+        const ps = parseFloat(this.value);
+        const pi = parseFloat(document.getElementById('detailInit').value);
+        document.getElementById('detailProfit').innerText = formatCurrency((isNaN(ps)?0:ps) - (isNaN(pi)?0:pi));
+      };
+    }
+    function saveDetail(){
+      if(!selectedName) return;
+      const item = inventory.find(i => i.name === selectedName);
+      if(!item) return;
+      const pi = parseFloat(document.getElementById('detailInit').value);
+      const ps = parseFloat(document.getElementById('detailSale').value);
+      if(isNaN(pi) || isNaN(ps)){ alert("Entrez des prix valides"); return; }
+      item.price = pi;
+      item.salePrice = ps;
+      saveInventory(); updateGlobalTotals(); renderTable(); renderDetail();
+      document.getElementById('message').innerText = "Article mis à jour.";
+    }
+
+    function updateGlobalTotals(){
+      let sumInitial = 0, sumSale = 0, sumProfit = 0;
+      inventory.forEach(item => {
+        const salePrice = (item.salePrice != null) ? item.salePrice : item.price;
+        sumInitial += (item.stock || 0) * item.price;
+        sumSale += (item.stock || 0) * salePrice;
+        sumProfit += (item.stock || 0) * (salePrice - item.price);
+      });
+      localStorage.setItem("grandInitial", sumInitial.toFixed(2));
+      localStorage.setItem("grandSale", sumSale.toFixed(2));
+      localStorage.setItem("grandProfit", sumProfit.toFixed(2));
+    }
+
+    loadInventory();
+  </script>
+</body>
+</html>

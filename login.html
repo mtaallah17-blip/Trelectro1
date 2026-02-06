@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TRelectro - Accès</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --surface: #ffffff;
+      --accent: #000000;
+      --muted: #444444;
+      --border: #d0d0d0;
+      --shadow: 0 6px 12px rgba(0,0,0,0.08);
+    }
+    .dark {
+      --bg: #000000;
+      --text: #ffffff;
+      --surface: #111111;
+      --accent: #ffffff;
+      --muted: #bbbbbb;
+      --border: #333333;
+      --shadow: 0 10px 24px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: background-color .25s ease, color .25s ease; }
+    header { background: #000; padding: 20px; display: flex; justify-content: center; align-items: center; }
+    header img { height: 44px; display: block; filter: none; }
+    .wrap { max-width: 440px; margin: 40px auto; padding: 0 20px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: var(--shadow); }
+    .input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); margin-bottom: 10px; }
+    .btn { appearance: none; border: 2px solid var(--text); background: transparent; color: var(--text); padding: 10px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; }
+    .btn:hover { background: var(--text); color: var(--bg); }
+    .muted { color: var(--muted); text-align: center; margin-top: 10px; }
+    .error { color: #c00; text-align: center; font-weight: 700; }
+    .theme-toggle { position: fixed; top: 16px; right: 16px; width: 56px; height: 32px; border: 2px solid var(--text); border-radius: 999px; background: var(--surface); display: flex; align-items: center; padding: 2px; box-shadow: var(--shadow); cursor: pointer; transition: background-color .25s ease, border-color .25s ease; }
+    .theme-toggle .knob { width: 28px; height: 24px; border-radius: 999px; background: var(--text); transform: translateX(0); transition: transform .25s ease, background-color .25s ease; }
+    .dark .theme-toggle .knob { transform: translateX(22px); background: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="theme-toggle" onclick="toggleMode()" aria-label="Toggle theme"><div class="knob"></div></div>
+  <header>
+    <svg xmlns="http://www.w3.org/2000/svg" width="220" height="44" viewBox="0 0 220 44" aria-label="TRELECTRO">
+      <polygon points="6,2 22,2 14,20 28,20 10,42 16,24 0,24" fill="#ffffff"/>
+      <text x="40" y="31" fill="#ffffff" font-size="28" font-weight="900" font-family="Segoe UI, Arial Black, Arial, sans-serif">TR ELECTRO</text>
+    </svg>
+  </header>
+  <div class="wrap">
+    <div class="card">
+      <h2 style="margin-top:0;">Entrer le code d’accès</h2>
+      <input class="input" type="password" id="accessCode" placeholder="Code d’accès">
+      <button class="btn" onclick="enter()">Entrer</button>
+      <div id="accessError" class="error"></div>
+      <div class="muted">Ce site est privé. Entrez le code pour continuer.</div>
+    </div>
+  </div>
+  <script>
+    const ACCESS_CODE = "90431000";
+    (function initTheme(){ var t=localStorage.getItem('theme'); if(t==='dark'){ document.body.classList.add('dark'); } })();
+    function toggleMode(){ var isDark = document.body.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); }
+    function enter() {
+      const code = document.getElementById('accessCode').value.trim();
+      const err = document.getElementById('accessError');
+      err.innerText = '';
+      if (!code) { err.innerText = 'Entrez le code d’accès'; return; }
+      if (code !== ACCESS_CODE) { err.innerText = 'Code invalide'; return; }
+      localStorage.setItem('sessionUser', 'code:' + ACCESS_CODE);
+      window.location.href = 'index.html';
+    }
+    (function enforce() {
+      const session = localStorage.getItem('sessionUser');
+      if (session) window.location.href = 'index.html';
+    })();
+  </script>
+</body>
+</html>
